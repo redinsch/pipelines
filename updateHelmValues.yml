@@ -13,6 +13,9 @@ inputs:
   URL_FILESHARE:
     description: "The URL of the File-Share"
     required: true
+  USERNAME_FILESHARE:
+    description: "the Username of the File-share"
+    required: true
   RSA-KEY_FILESHARE:
     required: true
 
