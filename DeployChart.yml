@@ -1,0 +1,50 @@
+name: 'Deploy Chart'
+description: 'Deploy Chart'
+inputs:
+  KUBECTL_CONFIG:
+    description: ""
+    required: true
+  VALUES_FILE:
+    description: ""
+    required: true
+  MICROSERVICE:
+    description: ""
+    required: true
+  CHART_REPO:
+    description: ""
+    required: true
+  DEPLOYMENT_NAME:
+    description: "Name of the Helm deployment."
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    # Download Secure-File
+    - name: base64-to-file
+      id: write_file
+      uses: timheuer/base64-to-file@v1.1
+      with:
+        fileName: "custom-config"
+        encodedString: ${{ inputs.KUBECTL_CONFIG }}
+
+    # Checkout
+    - uses: actions/checkout@v3
+
+    - name: Clone Chart-Repository
+      shell: bash
+      run: git clone 
+
+    - name: Git Clone Action
+      uses: sudosubin/git-clone-action@v1.0.1
+      with:
+        # Repository owner and name. Ex: sudosubin/git-clone-action
+        repository: ${{inputs.CHART_REPO}}
+
+    - name: list Files
+      run: ls
+
+    # Deploy to Kubernetes
+    - name: Helm Upgrade
+      shell: bash
+      run: helm upgrade ${{ inputs.DEPLOYMENT_NAME}} . --values ${{ inputs.VALUES_FILE }} --kubeconfig ${{ steps.write_file.outputs.filePath }}
