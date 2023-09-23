@@ -17,6 +17,7 @@ inputs:
     description: "the Username of the File-share"
     required: true
   RSA-KEY_FILESHARE:
+    description: "The RSA-Key for the File-Share"
     required: true
 
 runs:
