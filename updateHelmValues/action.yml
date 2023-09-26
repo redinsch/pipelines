@@ -40,7 +40,7 @@ runs:
     - name: Get Actual File
       shell: bash
       run: |
-        scp -P 23 -i ./id_rsa -o "StrictHostKeyChecking no" ${{ inputs.USERNAME_FILESHARE }}@${{ inputs.URL_FILESHARE }}:${{ inputs.VALUES_FILE_NAME }} ./newValues.yml
+        scp -P 23 -i ${{ steps.write_file.outputs.filePath }} -o "StrictHostKeyChecking no" ${{ inputs.USERNAME_FILESHARE }}@${{ inputs.URL_FILESHARE }}:${{ inputs.VALUES_FILE_NAME }} ./newValues.yml
 
     - name: list Files
       shell: bash
