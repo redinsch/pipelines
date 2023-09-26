@@ -58,29 +58,29 @@ runs:
       shell: bash
       run: cat ./newValues.yml
 
-    - name: Check and Lock Remote-File
-      shell: bash
-      run: | 
-        ssh -p23 -i ${{steps.write_file.outputs.filePath}} ${{inputs.USERNAME_FILESHARE}}@${{inputs.URL_FILESHARE}} |
-        #!/bin/bash
-        filename="${{inputs.VALUES_FILE_NAME}}.lock"
-        max_attempts=3
-        attempt=1
+    #- name: Check and Lock Remote-File
+      #shell: bash
+      #run: ssh -p23 -i ${{steps.write_file.outputs.filePath}} ${{inputs.USERNAME_FILESHARE}}@${{inputs.URL_FILESHARE}} touch ${{inputs.VALUES_FILE_NAME}}
+      # run: | 
+      #   #!/bin/bash
+      #   filename="${{inputs.VALUES_FILE_NAME}}.lock"
+      #   max_attempts=3
+      #   attempt=1
 
-        # Überprüfe, ob die Datei existiert
-        while [ -f "$filename" ]; do
-            if [ $attempt -gt $max_attempts ]; then
-                echo "Maximale Anzahl an Versuchen erreicht. Lock Datei immernoch vorhanden."
-                exit 1
-            fi
+      #   # Überprüfe, ob die Datei existiert
+      #   while [ -f "$filename" ]; do
+      #       if [ $attempt -gt $max_attempts ]; then
+      #           echo "Maximale Anzahl an Versuchen erreicht. Lock Datei immernoch vorhanden."
+      #           exit 1
+      #       fi
 
-            echo "Datei nicht gefunden. Versuch Nr. $attempt."
+      #       echo "Datei nicht gefunden. Versuch Nr. $attempt."
 
-            # Warte eine zufällige Zeit (1-10 Sekunden) und inkrementiere den Versuchszähler
-            sleep $((1 + RANDOM % 10))
-            attempt=$((attempt + 1))
-        done
-        touch ${{inputs.VALUES_FILE_NAME}}.lock
+      #       # Warte eine zufällige Zeit (1-10 Sekunden) und inkrementiere den Versuchszähler
+      #       sleep $((1 + RANDOM % 10))
+      #       attempt=$((attempt + 1))
+      #   done
+      #   touch $filename
 
     - name: Update Remote File
       shell: bash
