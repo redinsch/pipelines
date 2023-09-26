@@ -49,7 +49,7 @@ runs:
 
     - name: Set Key Protections
       shell: bash
-      run: chmod 600 ${{ steps.write_file.outputs.filePath }}
+      run: chmod 600 ${{ steps.write_id_file.outputs.filePath }}
 
     - name: Get Values File
       shell: bash
