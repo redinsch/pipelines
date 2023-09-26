@@ -33,17 +33,28 @@ runs:
   using: "composite"
   steps:
     # Download Secure-File
-    - name: base64-to-file
+    - name: base64-to-file Kube
       id: write_file
       uses: timheuer/base64-to-file@v1.1
       with:
         fileName: "custom-config"
         encodedString: ${{ inputs.KUBECTL_CONFIG }}
 
+    - name: base64-to-file ID
+      id: write_id_file
+      uses: timheuer/base64-to-file@v1.1
+      with:
+        fileName: "id_rsa"
+        encodedString: ${{ inputs.RSA-KEY_FILESHARE }}
+
+    - name: Set Key Protections
+      shell: bash
+      run: chmod 600 ${{ steps.write_file.outputs.filePath }}
+
     - name: Get Values File
       shell: bash
       run: |
-        scp -P 23 -i ${{ steps.write_file.outputs.filePath }} -o "StrictHostKeyChecking no" ${{ inputs.USERNAME_FILESHARE }}@${{ inputs.URL_FILESHARE }}:${{ inputs.VALUES_FILE_NAME }} ./Values.yml
+        scp -P 23 -i ${{ steps.write_id_file.outputs.filePath }} -o "StrictHostKeyChecking no" ${{ inputs.USERNAME_FILESHARE }}@${{ inputs.URL_FILESHARE }}:${{ inputs.VALUES_FILE_NAME }} ./Values.yml
 
 
     # Checkout
