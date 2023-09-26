@@ -52,7 +52,7 @@ runs:
       with:
         from-file: './newValues.yml'
         to-file: 'newValues.yml'
-        merge: "{ '${{ inputs.VALUE_NAME }}': ${{ inputs.NEW_VALUE }} }"
+        merge: '{ "${{ inputs.VALUE_NAME }}": "${{ inputs.NEW_VALUE }}" }'
     
     - name: view new Yaml
       shell: bash
