@@ -39,6 +39,7 @@ runs:
         scp -P 23 -i ./id_rsa -o "StrictHostKeyChecking no" ${{ inputs.USERNAME_FILESHARE }}@${{ inputs.URL_FILESHARE }}:${{ inputs.VALUES_FILE_NAME }} ./newValues.yml
 
     - name: list Files
+      shell: bash
       run: ls
 
     - name: Replace Value in YAML
@@ -47,7 +48,7 @@ runs:
       with:
         from-file: './newValues.yml'
         to-file: 'newValues.yml'
-        merge: { '${{ inputs.VALUE_NAME }}': ${{ inputs.NEW_VALUE }} }
+        merge: "{ '${{ inputs.VALUE_NAME }}': ${{ inputs.NEW_VALUE }} }"
     
     - name: view new Yaml
       shell: bash
@@ -55,7 +56,8 @@ runs:
 
     - name: Update RemoteFile
       shell: bash
-      run: ssh -p23 -i ./id_rsa ${{inputs.USERNAME_FILESHARE}}@${{inputs.URL_FILESHARE}} |
+      run: | 
+        ssh -p23 -i ./id_rsa ${{inputs.USERNAME_FILESHARE}}@${{inputs.URL_FILESHARE}} |
         #!/bin/bash
         filename="${{inputs.VALUES_FILE_NAME}}.lock"
         max_attempts=3
@@ -76,8 +78,7 @@ runs:
         done
         touch ${{inputs.VALUES_FILE_NAME}}.lock
 
-        - name: Get Actual File
-          shell: bash
-          run: |
-            scp -P 23 -i ./id_rsa -o "StrictHostKeyChecking no" ./newValues.yml ${{ inputs.USERNAME_FILESHARE }}@${{ inputs.URL_FILESHARE }}:${{ inputs.VALUES_FILE_NAME }}
-    
+    - name: Get Actual File
+      shell: bash
+      run: |
+        scp -P 23 -i ./id_rsa -o "StrictHostKeyChecking no" ./newValues.yml ${{ inputs.USERNAME_FILESHARE }}@${{ inputs.URL_FILESHARE }}:${{ inputs.VALUES_FILE_NAME }}
