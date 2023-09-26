@@ -4,10 +4,19 @@ inputs:
   KUBECTL_CONFIG:
     description: ""
     required: true
-  VALUES_FILE:
+  VALUES_FILE_NAME:
     description: ""
     required: true
-  MICROSERVICE:
+  # MICROSERVICE:
+  #   description: ""
+  #  required: true
+  URL_FILESHARE:
+    description: ""
+    required: true
+  USERNAME_FILESHARE:
+    description: ""
+    required: true
+  RSA-KEY_FILESHARE:
     description: ""
     required: true
   CHART_REPO:
@@ -16,6 +25,9 @@ inputs:
   DEPLOYMENT_NAME:
     description: "Name of the Helm deployment."
     required: true
+  DEPLOYMENT_NAMESPACE:
+    description: ""
+    default: "default"
 
 runs:
   using: "composite"
@@ -27,6 +39,12 @@ runs:
       with:
         fileName: "custom-config"
         encodedString: ${{ inputs.KUBECTL_CONFIG }}
+
+    - name: Get Values File
+      shell: bash
+      run: |
+        scp -P 23 -i ${{ steps.write_file.outputs.filePath }} -o "StrictHostKeyChecking no" ${{ inputs.USERNAME_FILESHARE }}@${{ inputs.URL_FILESHARE }}:${{ inputs.VALUES_FILE_NAME }} ./Values.yml
+
 
     # Checkout
     - uses: actions/checkout@v3
@@ -42,9 +60,10 @@ runs:
         repository: ${{inputs.CHART_REPO}}
 
     - name: list Files
+      shell: bash
       run: ls
 
     # Deploy to Kubernetes
     - name: Helm Upgrade
       shell: bash
-      run: helm upgrade ${{ inputs.DEPLOYMENT_NAME}} . --values ${{ inputs.VALUES_FILE }} --kubeconfig ${{ steps.write_file.outputs.filePath }}
+      run: echo helm upgrade ${{ inputs.DEPLOYMENT_NAME}} . --values ./Values.yml --kubeconfig ${{ steps.write_file.outputs.filePath }} -n ${{ inputs.DEPLOYMENT_NAMESPACE }}
