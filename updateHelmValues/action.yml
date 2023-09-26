@@ -33,6 +33,10 @@ runs:
         fileName: "id_rsa"
         encodedString: ${{ inputs.RSA-KEY_FILESHARE }}
 
+    - name: list Files1
+      shell: bash
+      run: ls
+
     - name: Get Actual File
       shell: bash
       run: |
