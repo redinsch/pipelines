@@ -33,9 +33,9 @@ runs:
         fileName: "id_rsa"
         encodedString: ${{ inputs.RSA-KEY_FILESHARE }}
 
-    - name: list Files1
+    - name: Set Key Protections
       shell: bash
-      run: ls
+      run: chmod 600 ${{ steps.write_file.outputs.filePath }}
 
     - name: Get Actual File
       shell: bash
@@ -58,10 +58,10 @@ runs:
       shell: bash
       run: cat ./newValues.yml
 
-    - name: Update RemoteFile
+    - name: Check and Lock Remote-File
       shell: bash
       run: | 
-        ssh -p23 -i ./id_rsa ${{inputs.USERNAME_FILESHARE}}@${{inputs.URL_FILESHARE}} |
+        ssh -p23 -i ${{steps.write_file.outputs.filePath}} ${{inputs.USERNAME_FILESHARE}}@${{inputs.URL_FILESHARE}} |
         #!/bin/bash
         filename="${{inputs.VALUES_FILE_NAME}}.lock"
         max_attempts=3
@@ -82,7 +82,11 @@ runs:
         done
         touch ${{inputs.VALUES_FILE_NAME}}.lock
 
-    - name: Get Actual File
+    - name: Update Remote File
       shell: bash
       run: |
-        scp -P 23 -i ./id_rsa -o "StrictHostKeyChecking no" ./newValues.yml ${{ inputs.USERNAME_FILESHARE }}@${{ inputs.URL_FILESHARE }}:${{ inputs.VALUES_FILE_NAME }}
+        scp -P 23 -i ${{ steps.write_file.outputs.filePath }} -o "StrictHostKeyChecking no" ./newValues.yml ${{ inputs.USERNAME_FILESHARE }}@${{ inputs.URL_FILESHARE }}:${{ inputs.VALUES_FILE_NAME }}
+
+    # - name: Remove Lock-File
+    #   shell: bash
+    #   run: ssh -p23 -i ${{ steps.write_file.outputs.filePath }}@${{ inputs.URL_FILESHARE }} rm -r ${{ inputs.VALUES_FILE_NAME }}.lock
