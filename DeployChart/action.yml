@@ -7,9 +7,6 @@ inputs:
   VALUES_FILE_NAME:
     description: ""
     required: true
-  # MICROSERVICE:
-  #   description: ""
-  #  required: true
   URL_FILESHARE:
     description: ""
     required: true
@@ -63,10 +60,6 @@ runs:
       shell: bash
       run: |
         scp -P 23 -i ${{ steps.write_id_file.outputs.filePath }} -o "StrictHostKeyChecking no" ${{ inputs.USERNAME_FILESHARE }}@${{ inputs.URL_FILESHARE }}:${{ inputs.VALUES_FILE_NAME }} ./Values.yml
-
-    # - name: Clone Chart-Repository
-    #   shell: bash
-    #   run: git clone ${{inputs.CHART_REPO}}
 
     - name: Git Clone Action
       shell: bash
