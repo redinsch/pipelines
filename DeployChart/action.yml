@@ -56,19 +56,13 @@ runs:
       run: |
         scp -P 23 -i ${{ steps.write_id_file.outputs.filePath }} -o "StrictHostKeyChecking no" ${{ inputs.USERNAME_FILESHARE }}@${{ inputs.URL_FILESHARE }}:${{ inputs.VALUES_FILE_NAME }} ./Values.yml
 
-
-    # Checkout
-    - uses: actions/checkout@v3
-
-    - name: Clone Chart-Repository
-      shell: bash
-      run: git clone 
+    # - name: Clone Chart-Repository
+    #   shell: bash
+    #   run: git clone ${{inputs.CHART_REPO}}
 
     - name: Git Clone Action
-      uses: sudosubin/git-clone-action@v1.0.1
-      with:
-        # Repository owner and name. Ex: sudosubin/git-clone-action
-        repository: ${{inputs.CHART_REPO}}
+      shell: bash
+      run: git clone https://${{ github.token }}@${{ inputs.CHART_REPO }}
 
     - name: list Files
       shell: bash
