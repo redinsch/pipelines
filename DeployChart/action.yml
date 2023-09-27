@@ -28,6 +28,9 @@ inputs:
   DEPLOYMENT_NAMESPACE:
     description: ""
     default: "default"
+  GITHUB_TOKEN:
+    description: ""
+    required: true
 
 runs:
   using: "composite"
@@ -62,7 +65,7 @@ runs:
 
     - name: Git Clone Action
       shell: bash
-      run: git clone https://${{ github.token }}@${{ inputs.CHART_REPO }}
+      run: git clone https://${{ inputs.GITHUB_TOKEN }}@${{ inputs.CHART_REPO }}
 
     - name: list Files
       shell: bash
