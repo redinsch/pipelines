@@ -35,6 +35,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+
+    - name: Clear WorkingDirectory
+      shell: bash
+      run: rm -r ./*
+
     # Download Secure-File
     - name: base64-to-file Kube
       id: write_file
@@ -65,7 +70,7 @@ runs:
 
     - name: Git Clone Action
       shell: bash
-      run: git clone https://${{ inputs.GITHUB_TOKEN }}@${{ inputs.CHART_REPO }}
+      run: git clone https://${{ inputs.GITHUB_TOKEN }}@${{ inputs.CHART_REPO }} .
 
     - name: list Files
       shell: bash
