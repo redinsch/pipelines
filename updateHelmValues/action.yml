@@ -53,10 +53,6 @@ runs:
         from-file: './newValues.yml'
         to-file: 'newValues.yml'
         merge: '{ "${{ inputs.VALUE_NAME }}": "${{ inputs.NEW_VALUE }}" }'
-    
-    - name: view new Yaml
-      shell: bash
-      run: cat ./newValues.yml
 
     #- name: Check and Lock Remote-File
       #shell: bash
