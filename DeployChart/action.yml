@@ -68,4 +68,4 @@ runs:
     # Deploy to Kubernetes
     - name: Helm Upgrade
       shell: bash
-      run: helm upgrade ${{ inputs.DEPLOYMENT_NAME}} ./Chart --values ./Values.yml --kubeconfig ${{ steps.write_file.outputs.filePath }} -n ${{ inputs.DEPLOYMENT_NAMESPACE }}
+      run: helm upgrade -i ${{ inputs.DEPLOYMENT_NAME}} ./Chart --values ./Values.yml --kubeconfig ${{ steps.write_file.outputs.filePath }} -n ${{ inputs.DEPLOYMENT_NAMESPACE }}
